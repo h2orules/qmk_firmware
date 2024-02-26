@@ -17,3 +17,20 @@
 #pragma once
 
 #define SPLIT_HAND_PIN B3
+
+ /// https://thomasbaart.nl/2018/12/01/reducing-firmware-size-in-qmk/
+#undef LOCKING_SUPPORT_ENABLE
+#undef LOCKING_RESYNC_ENABLE
+#define NO_MUSIC_MODE
+
+/* Select hand configuration */
+#define MASTER_LEFT
+#define SPLIT_USB_DETECT
+
+// #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+
+// #define QUICK_TAP_TERM 0
+ #ifdef TAPPING_TERM
+     #undef TAPPING_TERM
+     #define TAPPING_TERM 200
+ #endif
