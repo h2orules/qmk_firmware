@@ -89,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
            KC_BSLS, KC_LBRC, KC_RBRC,  LT(_NUMPAD,KC_TAB), KC_Q, KC_W, KC_E, KC_R,  KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC_DEL, KC_DEL, KC_END, KC_PGDN,
         //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-                    KC_LPAD,           CW_TOGG, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,           KC_UP,
+                    KC_LPAD,           KC_CMTAB, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,           KC_UP,
         //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
            DM_PLY1, DM_PLY2, KC_MCTL,  TD(TD_MEGA_SHIFT), KC_Z, KC_X, KC_C, KC_V,   KC_B,                               KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, SC_RSPC,  KC_LEFT, KC_DOWN, KC_RIGHT,
         //└────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
@@ -105,7 +105,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
                     _______,           _______, KC_LCTL, KC_LALT, KC_LSFT, KC_LGUI, XXXXXXX,                            KC_PGDN,  KC_LEFT, KC_DOWN, KC_RGHT, KC_LCBR, KC_RCBR,          KC_BRIU,
         //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           DM_REC1, DM_REC2, DM_RSTP,  _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), XXXXXXX,                            XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSLS, XXXXXXX,  XXXXXXX, KC_BRID, XXXXXXX,
+           DM_REC1, DM_REC2, DM_RSTP,  _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), XXXXXXX,                            XXXXXXX, A(KC_LEFT), XXXXXXX, A(KC_RGHT), KC_BSLS, XXXXXXX,  XXXXXXX, KC_BRID, XXXXXXX,
         //└────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
                                                                   _______, _______, _______, _______,          _______, _______, _______, _______
         //                                                       └────────┴────────┴────────┴────────┘        └────────┴────────┴────────┴────────┘
@@ -289,8 +289,8 @@ static td_tap_t xtap_state = {
 void megaShift_finished(tap_dance_state_t *state, void *user_data) {
     xtap_state.state = cur_dance(state);
     switch (xtap_state.state) {
-        case TD_SINGLE_TAP: register_code(KC_LPRN); break;
-        case TD_SINGLE_HOLD: register_code(KC_LSFT); break;
+        case TD_SINGLE_TAP: add_mods(MOD_BIT(KC_LSFT)); register_code(KC_9); del_mods(MOD_BIT(KC_LSFT)); break;
+        case TD_SINGLE_HOLD: register_mods(MOD_BIT(KC_LSFT)); break;
         case TD_DOUBLE_TAP: /* caps_word_toggle ON RESET */ break;
         case TD_DOUBLE_HOLD: register_code(KC_LALT); break;
         // Last case is for fast typing. Assuming your key is `f`:
@@ -303,10 +303,10 @@ void megaShift_finished(tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void megasShift_reset(tap_dance_state_t *state, void *user_data) {
+void megaShift_reset(tap_dance_state_t *state, void *user_data) {
     switch (xtap_state.state) {
-        case TD_SINGLE_TAP: unregister_code(KC_LPRN); break;
-        case TD_SINGLE_HOLD: unregister_code(KC_LSFT); break;
+        case TD_SINGLE_TAP: add_mods(MOD_BIT(KC_LSFT)); unregister_code(KC_9); del_mods(MOD_BIT(KC_LSFT)); break;
+        case TD_SINGLE_HOLD: unregister_mods(MOD_BIT(KC_LSFT)); break;
         case TD_DOUBLE_TAP: caps_word_toggle(); break;
         case TD_DOUBLE_HOLD: unregister_code(KC_LALT); break;
         //case TD_DOUBLE_SINGLE_TAP: unregister_code(KC_X); break;
