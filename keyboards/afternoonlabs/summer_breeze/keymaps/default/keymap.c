@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <stdio.h>
-//#include <os_detection.h>
+// #include <os_detection.h>
 
 #include QMK_KEYBOARD_H
 
@@ -31,8 +31,8 @@ enum layer_names {
 
 // Super CMD+Tab.
 // TODO: OS Detection to switch between ALT & CMD
-bool is_alt_tab_active = false;
-uint16_t alt_tab_timer = 0;
+bool     is_alt_tab_active = false;
+uint16_t alt_tab_timer     = 0;
 
 enum custom_keycodes {
     KC_QWERTY = SAFE_RANGE,
@@ -58,7 +58,7 @@ typedef enum {
 } td_state_t;
 
 typedef struct {
-    bool is_press_action;
+    bool       is_press_action;
     td_state_t state;
 } td_tap_t;
 
@@ -77,82 +77,80 @@ void megaShift_reset(tap_dance_state_t *state, void *user_data);
 // Tap Dance definitions
 tap_dance_action_t tap_dance_actions[] = {
     // Tap once for Escape, twice for Caps Lock
-    [TD_SHFT_CAPS] = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
-    [TD_MEGA_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, megaShift_finished, megaShift_reset)
-};
+    [TD_SHFT_CAPS]  = ACTION_TAP_DANCE_DOUBLE(KC_LSFT, KC_CAPS),
+    [TD_MEGA_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, megaShift_finished, megaShift_reset)};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_MAIN] = LAYOUT(
-        //┌────────┬────────┬────────┐┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐┌────────┬────────┬────────┐
-           KC_BSLS, KC_EQL,  KC_GRAVE, KC_ESC,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                               KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINUS,  KC_INS, KC_HOME,  KC_PGUP,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           KC_BSLS, KC_LBRC, KC_RBRC,  LT(_NUMPAD,KC_TAB), KC_Q, KC_W, KC_E, KC_R,  KC_T,                               KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC_DEL, KC_DEL, KC_END, KC_PGDN,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-                    KC_LPAD,           CW_TOGG,  KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                               KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,           KC_UP,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           DM_PLY1, DM_PLY2, KC_MCTL,  TD(TD_SHFT_CAPS), KC_Z, KC_X, KC_C, KC_V,    KC_B,                               KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, SC_RSPC,  KC_LEFT, KC_DOWN, KC_RIGHT,
-        //└────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
-                                                                  KC_LGUI, KC_LOWER, KC_LCTL, KC_ENT,         KC_SPC,   KC_RGUI, KC_RALT, KC_RAISE
+        // ┌────────┬────────┬────────┐┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐┌────────┬────────┬────────┐
+        KC_BSLS, KC_EQL, KC_GRAVE, KC_ESC, KC_1, KC_2, KC_3, KC_4, KC_5, KC_6, KC_7, KC_8, KC_9, KC_0, KC_MINUS, KC_INS, KC_HOME, KC_PGUP,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        KC_BSLS, KC_LBRC, KC_RBRC, LT(_NUMPAD, KC_TAB), KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_BSPC_DEL, KC_DEL, KC_END, KC_PGDN,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        KC_LPAD, CW_TOGG, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_UP,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        DM_PLY1, DM_PLY2, KC_MCTL, TD(TD_SHFT_CAPS), KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, SC_RSPC, KC_LEFT, KC_DOWN, KC_RIGHT,
+        // └────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
+        KC_LGUI, KC_LOWER, KC_LCTL, KC_ENT, KC_SPC, KC_RGUI, KC_RALT, KC_RAISE
         //                                                       └────────┴────────┴────────┴────────┘        └────────┴────────┴────────┴────────┘
-    ),
+        ),
 
     [_LOWER] = LAYOUT(
-        //┌────────┬────────┬────────┐┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐┌────────┬────────┬────────┐
-           _______, _______, _______,  KC_GRV,   KC_F1,  KC_F2,   KC_F3,   KC_F4,   KC_F5,                              KC_F6,   KC_F7,   KC_F8,   KC_F9,  KC_F10,  KC_EQUAL,  KC_MUTE, KC_VOLD, KC_VOLU,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           _______, _______, _______, A(KC_TAB), XXXXXXX, LCA_T(KC_NO), LSA_T(KC_NO), LSG_T(KC_NO), XXXXXXX,             KC_PGUP, KC_HOME, KC_UP,   KC_END, KC_LBRC, KC_RBRC, KC_MPRV, KC_MPLY, KC_MNXT,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-                    _______,           _______, KC_LCTL, KC_LALT, KC_LSFT, KC_LGUI, XXXXXXX,                            KC_PGDN,  KC_LEFT, KC_DOWN, KC_RGHT, KC_LCBR, KC_RCBR,          KC_BRIU,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           DM_REC1, DM_REC2, DM_RSTP,  _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B),                            XXXXXXX, A(KC_LEFT), XXXXXXX, A(KC_RGHT), KC_BSLS, XXXXXXX,  XXXXXXX, KC_BRID, XXXXXXX,
-        //└────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
-                                                                  _______, _______, _______, _______,          _______, _______, _______, _______
+        // ┌────────┬────────┬────────┐┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐┌────────┬────────┬────────┐
+        _______, _______, _______, KC_GRV, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_EQUAL, KC_MUTE, KC_VOLD, KC_VOLU,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        _______, _______, _______, A(KC_TAB), XXXXXXX, LCA_T(KC_NO), LSA_T(KC_NO), LSG_T(KC_NO), XXXXXXX, KC_PGUP, KC_HOME, KC_UP, KC_END, KC_LBRC, KC_RBRC, KC_MPRV, KC_MPLY, KC_MNXT,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        _______, _______, KC_LCTL, KC_LALT, KC_LSFT, KC_LGUI, XXXXXXX, KC_PGDN, KC_LEFT, KC_DOWN, KC_RGHT, KC_LCBR, KC_RCBR, KC_BRIU,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        DM_REC1, DM_REC2, DM_RSTP, _______, C(KC_Z), C(KC_X), C(KC_C), C(KC_V), C(KC_B), XXXXXXX, A(KC_LEFT), XXXXXXX, A(KC_RGHT), KC_BSLS, XXXXXXX, XXXXXXX, KC_BRID, XXXXXXX,
+        // └────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
+        _______, _______, _______, _______, _______, _______, _______, _______
         //                                                       └────────┴────────┴────────┴────────┘        └────────┴────────┴────────┴────────┘
-    ),
+        ),
 
     [_RAISE] = LAYOUT(
-        //┌────────┬────────┬────────┐┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐┌────────┬────────┬────────┐
-           KC_BTN4, KC_WH_U, KC_BTN5,  _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            C(A(KC_D)), C(A(KC_E)), C(A(KC_F)), C(A(KC_T)), C(A(KC_G)), XXXXXXX,          _______, _______, _______,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           KC_BTN1, KC_WH_D, KC_BTN2,  _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            XXXXXXX, C(A(G(KC_LEFT))), C(A(KC_UP)), C(A(G(KC_RIGHT))), XXXXXXX, XXXXXXX,  _______, _______, _______,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-                    KC_MS_U,           _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, G(KC_TAB),                          C(A(KC_ENT)), C(A(KC_LEFT)), C(A(KC_DOWN)), C(A(KC_RIGHT)), C(A(KC_DEL)), XXXXXXX,     _______,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           KC_MS_L, KC_MS_D, KC_MS_R,  _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, G(S(KC_TAB)),                       XXXXXXX, XXXXXXX, C(A(KC_C)), XXXXXXX, XXXXXXX, XXXXXXX,                      _______, _______, _______,
-        //└────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
-                                                                  _______, _______, _______, _______,          _______, _______, _______, _______
+        // ┌────────┬────────┬────────┐┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐┌────────┬────────┬────────┐
+        KC_BTN4, KC_WH_U, KC_BTN5, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, C(A(KC_D)), C(A(KC_E)), C(A(KC_F)), C(A(KC_T)), C(A(KC_G)), XXXXXXX, _______, _______, _______,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        KC_BTN1, KC_WH_D, KC_BTN2, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, C(A(G(KC_LEFT))), C(A(KC_UP)), C(A(G(KC_RIGHT))), XXXXXXX, XXXXXXX, _______, _______, _______,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        KC_MS_U, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, G(KC_TAB), C(A(KC_ENT)), C(A(KC_LEFT)), C(A(KC_DOWN)), C(A(KC_RIGHT)), C(A(KC_DEL)), XXXXXXX, _______,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        KC_MS_L, KC_MS_D, KC_MS_R, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, G(S(KC_TAB)), XXXXXXX, XXXXXXX, C(A(KC_C)), XXXXXXX, XXXXXXX, XXXXXXX, _______, _______, _______,
+        // └────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
+        _______, _______, _______, _______, _______, _______, _______, _______
         //                                                       └────────┴────────┴────────┴────────┘        └────────┴────────┴────────┴────────┘
-    ),
+        ),
 
     [_ADJUST] = LAYOUT(
-        //┌────────┬────────┬────────┐┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐┌────────┬────────┬────────┐
-           _______, _______, _______,  QK_BOOT, QK_RBT,  QK_MAKE, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,  _______, _______, _______,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           _______, KC_BTN3, _______,  EE_CLR,  _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,  _______, _______, _______,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-                    _______,           _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,           _______,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           _______, _______, _______,  _______, _______, _______, _______, _______, _______,                            _______, _______, _______, _______, _______, _______,  _______, _______, _______,
-        //└────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
-                                                                  _______, _______, _______, _______,          _______, _______, _______, _______
+        // ┌────────┬────────┬────────┐┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐┌────────┬────────┬────────┐
+        _______, _______, _______, QK_BOOT, QK_RBT, QK_MAKE, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        _______, KC_BTN3, _______, EE_CLR, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        // └────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
+        _______, _______, _______, _______, _______, _______, _______, _______
         //                                                       └────────┴────────┴────────┴────────┘        └────────┴────────┴────────┴────────┘
-    ),
+        ),
 
     [_NUMPAD] = LAYOUT(
-        //┌────────┬────────┬────────┐┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐┌────────┬────────┬────────┐
-           XXXXXXX, XXXXXXX, XXXXXXX,  _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            KC_ESC,  KC_PEQL, KC_PSLS, KC_PAST, KC_PMNS, KC_LPRN,  _______, _______, _______,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           XXXXXXX, XXXXXXX, XXXXXXX,  _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            KC_CIRC, KC_P7,   KC_P8,   KC_P9,   KC_PPLS, KC_RPRN,  _______, _______, _______,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-                    XXXXXXX,           XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            KC_PERC, KC_P4,   KC_P5,   KC_P6,   KC_EQL,  KC_BSPC,           _______,
-        //├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
-           XXXXXXX, XXXXXXX, XXXXXXX,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                            KC_PCMM, KC_P1,   KC_P2,   KC_P3,   KC_PENT, KC_ENT,   _______, _______, _______,
-        //└────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
-                                                                  XXXXXXX, XXXXXXX, _______, _______,          _______, _______, KC_P0,   KC_PDOT
+        // ┌────────┬────────┬────────┐┌────────┬────────┬────────┬────────┬────────┬────────┐                          ┌────────┬────────┬────────┬────────┬────────┬────────┐┌────────┬────────┬────────┐
+        XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ESC, KC_PEQL, KC_PSLS, KC_PAST, KC_PMNS, KC_LPRN, _______, _______, _______,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_CIRC, KC_P7, KC_P8, KC_P9, KC_PPLS, KC_RPRN, _______, _______, _______,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PERC, KC_P4, KC_P5, KC_P6, KC_EQL, KC_BSPC, _______,
+        // ├────────┼────────┼────────┤├────────┼────────┼────────┼────────┼────────┼────────┤                          ├────────┼────────┼────────┼────────┼────────┼────────┤├────────┼────────┼────────┤
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PCMM, KC_P1, KC_P2, KC_P3, KC_PENT, KC_ENT, _______, _______, _______,
+        // └────────┴────────┴────────┘└────────┴────────┼────────┼────────┼────────┼────────┼────────┐        ┌────────┼────────┼────────┼────────┴────────┴────────┴────────┘└────────┴────────┴────────┘
+        XXXXXXX, XXXXXXX, _______, _______, _______, _______, KC_P0, KC_PDOT
         //                                                       └────────┴────────┴────────┴────────┘        └────────┴────────┴────────┴────────┘
-    ),
-
+        ),
 
 };
 
@@ -191,12 +189,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             if (record->event.pressed) {
                 saved_mods = get_mods() & MOD_MASK_SHIFT;
 
-                if (saved_mods == MOD_MASK_SHIFT) {  // Both shifts pressed
+                if (saved_mods == MOD_MASK_SHIFT) { // Both shifts pressed
                     register_code(KC_DEL);
-                } else if (saved_mods) {   // One shift pressed
-                    del_mods(saved_mods);  // Remove any Shifts present
+                } else if (saved_mods) {  // One shift pressed
+                    del_mods(saved_mods); // Remove any Shifts present
                     register_code(KC_DEL);
-                    add_mods(saved_mods);  // Add shifts again
+                    add_mods(saved_mods); // Add shifts again
                 } else {
                     register_code(KC_BSPC);
                 }
@@ -208,8 +206,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case KC_CMTAB:
             if (record->event.pressed) {
                 if (!is_alt_tab_active) {
-                is_alt_tab_active = true;
-                register_code(KC_LGUI);
+                    is_alt_tab_active = true;
+                    register_code(KC_LGUI);
                 }
                 alt_tab_timer = timer_read();
                 register_code(KC_TAB);
@@ -222,12 +220,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void matrix_scan_user(void) { // The very important timer.
-  if (is_alt_tab_active) {
-    if (timer_elapsed(alt_tab_timer) > 1000) {
-      unregister_code(KC_LGUI);
-      is_alt_tab_active = false;
+    if (is_alt_tab_active) {
+        if (timer_elapsed(alt_tab_timer) > 1000) {
+            unregister_code(KC_LGUI);
+            is_alt_tab_active = false;
+        }
     }
-  }
 }
 
 /* Return an integer that corresponds to what kind of tap dance should be executed.
@@ -261,58 +259,91 @@ td_state_t cur_dance(tap_dance_state_t *state) {
     if (state->count == 1) {
         if (/*state->interrupted ||*/ !state->pressed) return TD_SINGLE_TAP;
         // Key has not been interrupted, but the key is still held. Means you want to send a 'HOLD'.
-        else return TD_SINGLE_HOLD;
+        else
+            return TD_SINGLE_HOLD;
     } else if (state->count == 2) {
         // TD_DOUBLE_SINGLE_TAP is to distinguish between typing "pepper", and actually wanting a double tap
         // action when hitting 'pp'. Suggested use case for this return value is when you want to send two
         // keystrokes of the key, and not the 'double tap' action/macro.
         /*if (state->interrupted) return TD_DOUBLE_SINGLE_TAP;
-        else */if (state->pressed) return TD_DOUBLE_HOLD;
-        else return TD_DOUBLE_TAP;
+        else */
+        if (state->pressed)
+            return TD_DOUBLE_HOLD;
+        else
+            return TD_DOUBLE_TAP;
     }
 
     // Assumes no one is trying to type the same letter three times (at least not quickly).
     // If your tap dance key is 'KC_W', and you want to type "www." quickly - then you will need to add
     // an exception here to return a 'TD_TRIPLE_SINGLE_TAP', and define that enum just like 'TD_DOUBLE_SINGLE_TAP'
     if (state->count == 3) {
-        if (/*state->interrupted ||*/ !state->pressed) return TD_TRIPLE_TAP;
-        else return TD_TRIPLE_HOLD;
-    } else return TD_UNKNOWN;
+        if (/*state->interrupted ||*/ !state->pressed)
+            return TD_TRIPLE_TAP;
+        else
+            return TD_TRIPLE_HOLD;
+    } else
+        return TD_UNKNOWN;
 }
 
 // Create an instance of 'td_tap_t' for the 'x' tap dance.
-static td_tap_t xtap_state = {
-    .is_press_action = true,
-    .state = TD_NONE
-};
+static td_tap_t xtap_state = {.is_press_action = true, .state = TD_NONE};
 
 void megaShift_finished(tap_dance_state_t *state, void *user_data) {
     xtap_state.state = cur_dance(state);
     switch (xtap_state.state) {
-        case TD_SINGLE_TAP: add_mods(MOD_BIT(KC_LSFT)); register_code(KC_9); del_mods(MOD_BIT(KC_LSFT)); break;
-        case TD_SINGLE_HOLD: register_mods(MOD_BIT(KC_LSFT)); break;
-        case TD_DOUBLE_TAP: /* caps_word_toggle ON RESET */ break;
-        case TD_DOUBLE_HOLD: register_code(KC_LALT); break;
+        case TD_SINGLE_TAP:
+            add_mods(MOD_BIT(KC_LSFT));
+            register_code(KC_9);
+            del_mods(MOD_BIT(KC_LSFT));
+            break;
+        case TD_SINGLE_HOLD:
+            register_mods(MOD_BIT(KC_LSFT));
+            break;
+        case TD_DOUBLE_TAP: /* caps_word_toggle ON RESET */
+            break;
+        case TD_DOUBLE_HOLD:
+            register_code(KC_LALT);
+            break;
         // Last case is for fast typing. Assuming your key is `f`:
         // For example, when typing the word `buffer`, and you want to make sure that you send `ff` and not `Esc`.
         // In order to type `ff` when typing fast, the next character will have to be hit within the `TAPPING_TERM`, which by default is 200ms.
-        //case TD_DOUBLE_SINGLE_TAP: tap_code(KC_X); register_code(KC_X); break;
-        case TD_TRIPLE_TAP: register_code(KC_CAPS); break;
-        case TD_TRIPLE_HOLD: register_code(KC_LCTL); break;
-        default: break;
+        // case TD_DOUBLE_SINGLE_TAP: tap_code(KC_X); register_code(KC_X); break;
+        case TD_TRIPLE_TAP:
+            register_code(KC_CAPS);
+            break;
+        case TD_TRIPLE_HOLD:
+            register_code(KC_LCTL);
+            break;
+        default:
+            break;
     }
 }
 
 void megaShift_reset(tap_dance_state_t *state, void *user_data) {
     switch (xtap_state.state) {
-        case TD_SINGLE_TAP: add_mods(MOD_BIT(KC_LSFT)); unregister_code(KC_9); del_mods(MOD_BIT(KC_LSFT)); break;
-        case TD_SINGLE_HOLD: unregister_mods(MOD_BIT(KC_LSFT)); break;
-        case TD_DOUBLE_TAP: caps_word_toggle(); break;
-        case TD_DOUBLE_HOLD: unregister_code(KC_LALT); break;
-        //case TD_DOUBLE_SINGLE_TAP: unregister_code(KC_X); break;
-        case TD_TRIPLE_TAP: unregister_code(KC_CAPS); break;
-        case TD_TRIPLE_HOLD: unregister_code(KC_LCTL); break;
-        default: break;
+        case TD_SINGLE_TAP:
+            add_mods(MOD_BIT(KC_LSFT));
+            unregister_code(KC_9);
+            del_mods(MOD_BIT(KC_LSFT));
+            break;
+        case TD_SINGLE_HOLD:
+            unregister_mods(MOD_BIT(KC_LSFT));
+            break;
+        case TD_DOUBLE_TAP:
+            caps_word_toggle();
+            break;
+        case TD_DOUBLE_HOLD:
+            unregister_code(KC_LALT);
+            break;
+        // case TD_DOUBLE_SINGLE_TAP: unregister_code(KC_X); break;
+        case TD_TRIPLE_TAP:
+            unregister_code(KC_CAPS);
+            break;
+        case TD_TRIPLE_HOLD:
+            unregister_code(KC_LCTL);
+            break;
+        default:
+            break;
     }
     xtap_state.state = TD_NONE;
 }
