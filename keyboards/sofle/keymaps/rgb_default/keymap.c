@@ -20,6 +20,8 @@
 
 #include QMK_KEYBOARD_H
 
+#include "host_layout.h"
+
 enum sofle_layers {
     _DEFAULTS = 0,
     _QWERTY = 0,
@@ -219,9 +221,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|------+-------+--------+--------+--------+------|                   |--------+-------+--------+--------+--------+---------|
   QK_BOOT, XXXXXXX,XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                    XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|------+-------+--------+--------+--------+------|                   |--------+-------+--------+--------+--------+---------|
-  RGB_TOG, RGB_HUI,RGB_SAI, RGB_VAI, KC_COLEMAKDH,KC_COLEMAK,             C(G(KC_LEFT)),KC_NO,KC_NO,C(G(KC_RGHT)),XXXXXXX, XXXXXXX,
+  UG_TOGG, UG_HUEU,UG_SATU, UG_VALU, KC_COLEMAKDH,KC_COLEMAK,             C(G(KC_LEFT)),KC_NO,KC_NO,C(G(KC_RGHT)),XXXXXXX, XXXXXXX,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
-  RGB_MOD, RGB_HUD,RGB_SAD, RGB_VAD, XXXXXXX,KC_QWERTY,XXXXXXX,   XXXXXXX, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
+  UG_NEXT, UG_HUED,UG_SATD, UG_VALD, XXXXXXX,KC_QWERTY,XXXXXXX,   XXXXXXX, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
   //|------+-------+--------+--------+--------+------|  ===  |   |  ===  |--------+-------+--------+--------+--------+---------|
                    _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______
     //            \--------+--------+--------+---------+-------|   |--------+---------+--------+---------+-------/
@@ -419,14 +421,18 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 	rgblight_set_layer_state(5, layer_state_cmp(state, _SWITCH));
     return state;
 }
+#endif
+
 void keyboard_post_init_user(void) {
+    host_layout_init();
+#ifdef RGBLIGHT_ENABLE
     // Enable the LED layers
     rgblight_layers = my_rgb_layers;
 
-	rgblight_mode(10);// haven't found a way to set this in a more useful way
+	rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL);
 
-}
 #endif
+}
 
 #ifdef OLED_ENABLE
 
@@ -465,9 +471,11 @@ static void print_logo_narrow(void) {
 static void print_status_narrow(void) {
     // Print current mode
     oled_set_cursor(0, 0);
-    switch(detected_host_os())
+    const os_variant_t active_host_os = host_layout_os();
+    switch(active_host_os)
     {
         case OS_MACOS:
+        case OS_IOS:
             oled_write_raw_P(mac_logo, sizeof(mac_logo));
             break;
         case OS_WINDOWS:
@@ -479,12 +487,9 @@ static void print_status_narrow(void) {
         default:
             oled_write_ln_P(PSTR("UNK_OS"), false);
     }
-    // if (.swap_lctl_lguikeymap_config) {
-    //     oled_write_raw_P(mac_logo, sizeof(mac_logo));
-    // } else {
-    //     oled_write_raw_P(windows_logo, sizeof(windows_logo));
-    // }
-
+    oled_set_cursor(0, 2);
+    oled_write_P(active_host_os == OS_UNSURE ? PSTR("MAC? ") :
+                 keymap_config.swap_lctl_lgui ? PSTR("CTRL ") : PSTR("CMD  "), false);
     oled_set_cursor(0, 3);
 
     switch (get_highest_layer(default_layer_state)) {
@@ -650,9 +655,9 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
             case _QWERTY:
             case _COLEMAKDH:
                 if (clockwise) {
-                    tap_code(KC_WH_D);
+                    tap_code(MS_WHLD);
                 } else {
-                    tap_code(KC_WH_U);
+                    tap_code(MS_WHLU);
                 }
             break;
         case _RAISE:
@@ -665,9 +670,9 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
             break;
         default:
                 if (clockwise) {
-                    tap_code(KC_WH_D);
+                    tap_code(MS_WHLD);
                 } else {
-                    tap_code(KC_WH_U);
+                    tap_code(MS_WHLU);
                 }
             break;
         }

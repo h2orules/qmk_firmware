@@ -19,12 +19,12 @@
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
 #define NO_MUSIC_MODE
+// This keymap has no one-shot keys; omit their engine to fit the AVR flash.
+#define NO_ACTION_ONESHOT
 
-/* Select hand configuration */
-#define MASTER_LEFT
-#define SPLIT_USB_DETECT
-// #define MASTER_RIGHT
-// #define EE_HANDS
+// Use the ATmega32U4 VBUS sense even when a powered dock has no host yet.
+// Do not enable SPLIT_USB_DETECT's enumeration timeout on this AVR target.
+#define OS_DETECTION_KEYBOARD_RESET
 
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 
@@ -39,11 +39,12 @@
 /* ws2812 RGB LED */
 #define WS2812_DI_PIN D3
 
-#define RGBLIGHT_SLEEP 120000
+#define RGBLIGHT_SLEEP
 #define RGBLIGHT_LAYERS
 
 #ifdef RGBLIGHT_ENABLE
-    #undef RGBLED_NUM
+    #undef RGBLIGHT_LED_COUNT
+    #undef RGBLED_SPLIT
 
     //#undef RGBLIGHT_ANIMATIONS
 	// #define RGBLIGHT_EFFECT_BREATHING
@@ -57,8 +58,8 @@
 	// #define RGBLIGHT_EFFECT_ALTERNATING
 	// #define RGBLIGHT_EFFECT_TWINKLE
 
-    #define RGBLED_NUM 72
-	#define RGBLED_SPLIT { 36, 36 } // haven't figured out how to use this yet
+    #define RGBLIGHT_LED_COUNT 72
+    #define RGBLED_SPLIT { 36, 36 }
 
     #define RGBLIGHT_LIMIT_VAL 120
     #define RGBLIGHT_HUE_STEP 10
