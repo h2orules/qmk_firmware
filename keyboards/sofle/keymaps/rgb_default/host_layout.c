@@ -1,6 +1,7 @@
 // Copyright 2026 QMK
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include "quantum.h"
+#include "keymap_introspection.h"
 #include "host_layout.h"
 
 static os_variant_t pending_host_os = OS_UNSURE;
@@ -24,6 +25,23 @@ void host_layout_init(void) {
 
 os_variant_t host_layout_os(void) {
     return active_host_os;
+}
+
+uint16_t host_layout_navigation_keycode(uint16_t keycode) {
+    if (active_host_os != OS_WINDOWS && active_host_os != OS_LINUX) {
+        switch (keycode) {
+            case KC_HOME:
+                return LGUI(KC_LEFT);
+            case KC_END:
+                return LGUI(KC_RIGHT);
+        }
+    }
+    return keycode;
+}
+
+uint16_t keycode_at_keymap_location(uint8_t layer, uint8_t row, uint8_t column) {
+    const uint16_t keycode = keycode_at_keymap_location_raw(layer, row, column);
+    return layer == _LOWER ? host_layout_navigation_keycode(keycode) : keycode;
 }
 
 bool process_detected_host_os_user(os_variant_t os) {

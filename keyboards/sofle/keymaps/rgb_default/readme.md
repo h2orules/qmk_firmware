@@ -3,11 +3,12 @@
 Build this 72-LED, ATmega32U4 Sofle layout with:
 
 ```sh
-qmk compile -kb sofle/rev1 -km rgb_default
+qmk compile -kb sofle/rev1 -km rgb_default -e BOOTLOADER=atmel-dfu
 ```
 
 The firmware is `sofle_rev1_rgb_default.hex`. This is not the separate
-`h2orules` keymap or the Keyhive hardware variant.
+`h2orules` keymap or the Keyhive hardware variant. The bootloader override
+matches the Atmel DFU controllers detected on both halves.
 
 ## Automatic host layout
 
@@ -30,6 +31,11 @@ the thumb key next to Enter. `MAC?` indicates the unknown-host fallback.
 Changes wait for all keys and modifiers to be released so a press and its
 release use the same mapping. The other OLED retains its WPM display.
 Automatic modifier swaps are not written to EEPROM.
+
+On `_LOWER`, Home/End send Command+Left/Right on macOS/iOS (and in the
+unknown-host Mac fallback), moving to the start/end of the line. Windows
+and Linux retain native Home/End. Holding Shift also selects to the line
+boundary; holding either navigation key retains normal host key repeat.
 
 QMK's USB fingerprinting is best-effort, not a guaranteed OS identification.
 

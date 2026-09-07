@@ -44,6 +44,51 @@ TEST_F(SofleHostLayout, DefersChangeUntilModifiersAreReleased) {
     EXPECT_EQ(host_layout_os(), OS_WINDOWS);
 }
 
+TEST_F(SofleHostLayout, NavigationMatchesAppliedHost) {
+    for (auto os : {OS_UNSURE, OS_MACOS, OS_WINDOWS, OS_LINUX, OS_IOS}) {
+        process_detected_host_os_user(os);
+        housekeeping_task_user();
+        const bool native = os == OS_WINDOWS || os == OS_LINUX;
+        EXPECT_EQ(host_layout_navigation_keycode(KC_HOME), native ? KC_HOME : LGUI(KC_LEFT));
+        EXPECT_EQ(host_layout_navigation_keycode(KC_END), native ? KC_END : LGUI(KC_RIGHT));
+        EXPECT_EQ(host_layout_navigation_keycode(KC_PGUP), KC_PGUP);
+        EXPECT_EQ(host_layout_navigation_keycode(KC_PGDN), KC_PGDN);
+        EXPECT_EQ(host_layout_navigation_keycode(KC_LEFT), KC_LEFT);
+    }
+}
+
+TEST_F(SofleHostLayout, MacNavigationPreservesShiftAndReleasesCommand) {
+    TestDriver driver;
+    auto shift = KeymapKey(0, 0, 0, KC_LSFT);
+    auto home = KeymapKey(0, 1, 0, host_layout_navigation_keycode(KC_HOME));
+    auto end = KeymapKey(0, 2, 0, host_layout_navigation_keycode(KC_END));
+    set_keymap({shift, home, end});
+    testing::InSequence sequence;
+
+    EXPECT_REPORT(driver, (KC_LSFT));
+    shift.press();
+    run_one_scan_loop();
+    EXPECT_REPORT(driver, (KC_LSFT, KC_LGUI));
+    EXPECT_REPORT(driver, (KC_LSFT, KC_LGUI, KC_LEFT));
+    home.press();
+    run_one_scan_loop();
+    EXPECT_REPORT(driver, (KC_LSFT, KC_LGUI));
+    EXPECT_REPORT(driver, (KC_LSFT));
+    home.release();
+    run_one_scan_loop();
+    EXPECT_REPORT(driver, (KC_LSFT, KC_LGUI));
+    EXPECT_REPORT(driver, (KC_LSFT, KC_LGUI, KC_RIGHT));
+    end.press();
+    run_one_scan_loop();
+    EXPECT_REPORT(driver, (KC_LSFT, KC_LGUI));
+    EXPECT_REPORT(driver, (KC_LSFT));
+    end.release();
+    run_one_scan_loop();
+    EXPECT_EMPTY_REPORT(driver);
+    shift.release();
+    run_one_scan_loop();
+}
+
 TEST_F(SofleHostLayout, DefersChangeUntilPhysicalKeysAreReleased) {
     auto key = KeymapKey(0, 0, 0, KC_A);
     set_keymap({key});
